@@ -16,7 +16,7 @@ mongoose.connect(url, {
 	useMongoClient: true
 });
 
-require('./config/passport')(passport);
+//require('./config/passport')(passport);
 
 // settings
 app.set('port', process.env.PORT || 3000);
@@ -38,7 +38,7 @@ app.use(passport.session());
 app.use(flash());
 
 // routes
-require('./app/routes.js')(app, passport);
+//require('./app/routes.js')(app, passport);
 
 // static files
 app.use(express.static(path.join(__dirname, 'public')));
