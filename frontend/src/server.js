@@ -1,49 +1,44 @@
 const express = require('express');
-const app = express();
-
+const engine = require('ejs-mate');
 const path = require('path');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const flash = require('connect-flash');
 const morgan = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
 const session = require('express-session');
 
-const { url } = require('./config/database.js');
+//Inicializations
+const app = express();
+require('./database');
+require('./passport/pass-auth');
 
-mongoose.connect(url, {
-	useMongoClient: true
-});
-
-//require('./config/passport')(passport);
-
-// settings
+app.engine('ejs',engine);
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // middlewares
 app.use(morgan('dev'));
-app.use(cookieParser());
-app.use(bodyParser.urlencoded({extended: false}));
-// required for passport
+app.use(express.urlencoded({extended: false}));   //se puede editar con el formato JSON
 app.use(session({
-	secret: 'faztwebtutorialexample',
+	secret: 'secretsesion',
 	resave: false,
 	saveUninitialized: false
 }));
+app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
-
+app.use((req, res, next) => {
+	app.locals.signupMessage = req.flash('signupMessage');
+	app.locals.signinMessage = req.flash('signinMessage');
+	app.locals.user = req.user;
+	next();
+  });
+  
 // routes
-//require('./app/routes.js')(app, passport);
+app.use('/', require('./routes/routes'));
 
-// static files
-app.use(express.static(path.join(__dirname, 'public')));
-
-// start the server
+//start the server API
 app.listen(app.get('port'), () => {
-	console.log('server on port ', app.get('port'));
+	console.log('SERVER ON PORT', app.get('port'));
 });
