@@ -1,0 +1,43 @@
+<Huawei> system-view 
+[Huawei] ip route-static 0.0.0.0 0 1.1.1.1
+[Huawei] dhcp enable 
+[Huawei] vlan 100 
+[Huawei-vlan100] quit 
+[Huawei] interface vlanif 100 
+[Huawei-Vlanif100] ip address 10.10.10.1 24 
+ [Huawei-Vlanif100] dhcp select interface 
+[Huawei-Vlanif100] quit
+[Huawei] wlan global country-code cn 
+[Huawei] wlan
+[Huawei-wlan-view] wmm-profile name wmm-1 id 1 
+[Huawei-wlan-wmm-prof-wmm-1] quit 
+[Huawei-wlan-view] radio-profile name radio-1 id 1
+[Huawei-wlan-radio-prof-radio-1] wmm-profile name wmm-1 
+[Huawei-wlan-radio-prof-radio-1] quit
+[Huawei-wlan-view] quit
+[Huawei] interface wlan-radio 0/0/0 
+[Huawei-Wlan-Radio0/0/0] radio-profile name radio-1 Warning: Modify the Radio type may cause some parameters of Radio resume default value, are you sure to continue?[Y/N]:y [Huawei-Wlan-Radio0/0/0] quit
+[Huawei] interface wlan-bss 1 
+[Huawei-Wlan-Bss1] port hybrid tagged vlan 100 
+[Huawei-Wlan-Bss1] quit
+[Huawei] dot1x enable 
+[Huawei] wlan 
+[Huawei-wlan-view] security-profile name security-1 id 1 
+[Huawei-wlan-sec-prof-security-1] security-policy wpa2 
+[Huawei-wlan-sec-prof-security-1] wpa2 authentication-method psk passphrase cipher Huawei@123 encryption-method ccmp 
+[Huawei-wlan-sec-prof-security-1] quit
+[Huawei-wlan-view] traffic-profile name traffic-1 id 1 
+[Huawei-wlan-traffic-prof-traffic-1] quit
+[Huawei-wlan-view] service-set name Huawei-1 id 1 [Huawei-wlan-service-set-Huawei-1] ssid Huawei-1 [Huawei-wlan-service-set-Huawei-1] traffic-profile name traffic-1 
+[Huawei-wlan-service-set-Huawei-1] security-profile name security-1 
+[Huawei-wlan-service-set-Huawei-1] wlan-bss 1 [Huawei-wlan-service-set-Huawei-1] quit 
+[Huawei-wlan-view] quit
+[Huawei] interface wlan-radio 0/0/0 
+[Huawei-Wlan-Radio0/0/0] service-set name Huawei-1 
+[Huawei-Wlan-Radio0/0/0] return
+<Huawei>  save Huawei.cfg 
+Are you sure to save the configuration to Huawei.cfg? (y/n)[n]:y 
+It will take several minutes to save configuration file, please wait...... 
+Configuration file had been saved successfully 
+Note: The configuration file will take effect after being activated
+startup saved-configuration Huawei.cfg
